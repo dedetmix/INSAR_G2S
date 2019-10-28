@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# NI, 08.02.2018 (noorlaila@geodesy.its.ac.id)
+# mt_prep gmtsar for SBAS configuration
+
+region=$1
+R=$2
+A=$3
+ov_R=$4
+ov_A=$5
+threshold=$6
+master_date=$7
+suffix=$8
+
+################# grap directory path from param_dir.txt ############
+crop_SM=$(grep crop_SB param_dir.txt | sed 's/^.*= //')
+raw=$(grep raw_data param_dir.txt | sed 's/^.*= //')
+raw_orig=$(grep raw_orig param_dir.txt | sed 's/^.*= //')
+topo=$(grep topo param_dir.txt | sed 's/^.*= //')
+SLC=$(grep SLC param_dir.txt | sed 's/^.*= //')
+#####################################################################
+
+# file input (must be put on PS folder):
+# 		date_no_master.txt
+#		intf_SB_list.in
+
+rm -r -f SMALL_BASELINES patch_reg cands_*
+mkdir patch_reg
+cd patch_reg
+devide_region.sh $region $R $A $ov_R $ov_A
+cd ..
+
+mkdir SMALL_BASELINES
+cd SMALL_BASELINES
+
+echo "gmtsar" > processor.txt
+matlab -nojvm -nosplash -nodisplay < $STAMPS/matlab/sb_parms_initial.m > sb_parms_initial.log
+
+cd ..
+rm -r -f SMALL_BASELINES/PATCH_*
+ln -f -s $topo/master.PRM .
+
+# read azimuth heading angle from the master image
+if [ $heading == auto ]; then
+heading=$(grep platformHeading $raw_orig/*$master_date*.xml | awk -F">||<" '{print $3}')
+fi
+
+p=1
+while read region
+do
+
+  mt_extract_info_gmtsar_SB $raw $raw_orig $topo $SLC $heading $master_date
+  mt_extract_cands_gmtsar_SB $crop $threshold $region $suffix
+
+  mkdir -p cands_$p
+  mv cands_old.grd cands_"$p"/.
+  mv cands0.grd cands_"$p"/.
+  mv cands.grd cands_"$p"/.
+
+  patch=$(echo PATCH_$p)
+  mkdir SMALL_BASELINES/$patch
+  mv pscands* SMALL_BASELINES/$patch/.
+  ln -s -f $PWD/ifgday.1.in SMALL_BASELINES/$patch/.
+  cd SMALL_BASELINES/$patch
+  correct_forum_sbas
+  rm -f swap_pixels.m
+  cd ../..
+  (( p++ ))
+done < patch_reg/PATCH.loc
+
+rsync -av patch_reg/PATCH_* SMALL_BASELINES/.
+cp patch_reg/width.txt SMALL_BASELINES/.
+cp patch_reg/len.txt SMALL_BASELINES/.
+cd SMALL_BASELINES
+ln -f -s ../*.in .
+ls -d PATCH_* > patch.list
+cd ..
+

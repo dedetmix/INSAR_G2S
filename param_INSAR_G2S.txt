@@ -1,0 +1,21 @@
+############ set parameters ################################################
+dataorbit  = descending 
+             # OPTION: ascending or descending
+raw_path   = /media/isya/649d6fa0-f505-4c78-9eb5-78d4aec5c2f3/RAW/Celle/Ascending/DESC_out/no_POE
+sen_POE    = /home/isya/APPS/ciloto/sen_orbit/aux_poeorb/
+temp_bl    = 50
+spatial_bl = 100
+region     = 1000/16000/9000/12000
+reg_ll     = 9.47916666667/10.9652777778/52.4958333333/53.15
+n_range    = 2
+n_azimuth  = 3
+ov_range   = 50
+ov_azimuth = 200
+threshold  = 0.4
+heading    = auto # for descending:-164.296, for ascending: -12.00707218611660e
+master_date= 20180128
+master_PRM = S1_20180128_ALL_F2
+suffix     = F2
+tiff_id    = 005
+type_data  = dual
+############################################################################
