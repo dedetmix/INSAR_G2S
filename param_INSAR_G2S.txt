@@ -1,7 +1,7 @@
 ############ set parameters ################################################
 dataorbit  = descending 
              # OPTION: ascending or descending
-raw_path   = /media/isya/649d6fa0-f505-4c78-9eb5-78d4aec5c2f3/RAW/Celle/Ascending/DESC_out/no_POE
+raw_path   = /media/isya/649d6fa0-f505-4c78-9eb5-78d4aec5c2f3/RAW/Celle/Descending
 sen_POE    = /home/isya/APPS/ciloto/sen_orbit/aux_poeorb/
 temp_bl    = 50
 spatial_bl = 100
