@@ -225,7 +225,8 @@ end
 len=load(lenname);
 
 %[gridX,gridY]=meshgrid(linspace(0,width,50),linspace(0,len,50));
-% For gmtsar output in case ROI is cropped so that xmin and/or xmax are not zero 
+%For gmtsar output in case ROI is cropped so that xmin and/or xmax are not zero
+%Ziyadin comment from GMTSAR Forum 
 [gridX,gridY]=meshgrid(linspace((min(ij(:,3))),width+(min(ij(:,3))),50),linspace((min(ij(:,2))),len+(min(ij(:,2))),50));
 
 if ~exist(laname,'file')

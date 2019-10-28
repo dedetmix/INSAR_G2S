@@ -233,7 +233,8 @@ if ~exist(lenname,'file')
 end
 len=load(lenname);
 
-%[gridX,gridY]=meshgrid(linspace(0,width,50),linspace(0,len,50)); modified by laila to make StaMPS works for GMTSAR
+%[gridX,gridY]=meshgrid(linspace(0,width,50),linspace(0,len,50));
+%Ziyadin comment from GMTSAR Forum
 [gridX,gridY]=meshgrid(linspace((min(ij(:,3))),width+(min(ij(:,3))),50),linspace((min(ij(:,2))),len+(min(ij(:,2))),50));
 
 if ~exist(laname,'file')
