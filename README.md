@@ -3,8 +3,8 @@ running the InSAR time series analyis using StaMPS.
  
 This program is established by the scripts of gmtsar_process, gmtsar2stamps, and gmtsar2stamps_sbas.
 gmtsar2stamps is originally from :
-                                  - Xiaopeng Tong - Chinese Academy of Sciences
-                                  - David Sandwell - Scripps Institution of Oceanography
+- Xiaopeng Tong, Chinese Academy of Sciences
+- David Sandwell, Scripps Institution of Oceanography
 
 Please read the guideline to use INSAR_G2S --> guideline_insar_g2s.pdf
 
