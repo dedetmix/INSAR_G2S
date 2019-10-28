@@ -13,3 +13,5 @@ For question and feedback, contact to : Noorlaila Isya (email: n.isya@tu-bs.de)
 Credit to users from GMTSAR forum
 http://gmt.soest.hawaii.edu/boards/6/topics/4346
 
+This is research code provided to you "AS IS" with no warranties of correctness. Use at your own Risk.
+
