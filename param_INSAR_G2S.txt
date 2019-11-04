@@ -18,4 +18,5 @@ master_PRM = S1_20180128_ALL_F2
 suffix     = F2
 tiff_id    = 005
 type_data  = dual
+             # OPTION: single | dual | mix
 ############################################################################
