@@ -188,8 +188,8 @@ echo " "
     
    cd $dir/batch_"$orb"/raw_orig
    ln -s ../topo/dem.grd .
-   preproc_batch_tops.csh data_dsc_sp.in dem.grd 1
-   preproc_batch_tops.csh data_dsc_sp.in dem.grd 2
+   preproc_batch_tops.csh data_"$orb"_sp.in dem.grd 1
+   preproc_batch_tops.csh data_"$orb"_sp.in dem.grd 2
    cd $dir
 
    cd $dir/batch_"$orb"
