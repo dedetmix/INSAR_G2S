@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # INSAR_G2S 1.0
-# Pre-processing Sentinel-1 TOPS SAR data to be able processed by the time series InSAR processing (PS and Small Baseline)
+# InSAR processing Sentinel-1 TOPS SAR data to be able run by the time series InSAR processing (StaMPS software | PS and Small Baseline Method)
 # A bundle script to generate the interferogram from GMTSAR software and further export to STAMPS format 
 # This program is established by the scripts of gmtsar_process, gmtsar2stamps, and gmtsar2stamps_sbas.
 # gmtsar2stamps is originally from :
@@ -188,8 +188,8 @@ echo " "
     
    cd $dir/batch_"$orb"/raw_orig
    ln -s ../topo/dem.grd .
-   preproc_batch_tops.csh data_dsc_sp.in dem.grd 1
-   preproc_batch_tops.csh data_dsc_sp.in dem.grd 2
+   preproc_batch_tops.csh data_"$orb"_sp.in dem.grd 1
+   preproc_batch_tops.csh data_"$orb"_sp.in dem.grd 2
    cd $dir
 
    cd $dir/batch_"$orb"
