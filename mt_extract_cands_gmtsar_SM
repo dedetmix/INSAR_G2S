@@ -78,9 +78,11 @@ do
   if [ -f "re_$name.grd" ]; then
     gmt grdtrack $dir_path/cands_old.dat -Gre_$name.grd -Z -bos >> $dir_path/pscands.1.ph
     gmt grdtrack $dir_path/cands_old.dat -Gim_$name.grd -Z -bos >> $dir_path/pscands.1.ph
-  else 
-    gmt grdtrack $dir_path/cands_old.dat -Greal_$name.grd -Z -bos >> $dir_path/pscands.1.ph
-    gmt grdtrack $dir_path/cands_old.dat -Gimag_$name.grd -Z -bos >> $dir_path/pscands.1.ph
+  else
+    gmt grdmath real_$name.grd FLIPUD = tmp_re.grd=bf
+    gmt grdtrack $dir_path/cands_old.dat -Gtmp_re.grd -Z -bos >> $dir_path/pscands.1.ph
+    gmt grdmath imag_$name.grd FLIPUD = tmp_im.grd=bf
+    gmt grdtrack $dir_path/cands_old.dat -Gtmp_im.grd -Z -bos >> $dir_path/pscands.1.ph
   fi
 done
 cd $dir_path
