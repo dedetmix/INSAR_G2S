@@ -94,15 +94,15 @@ echo " "
 
    prep_dir.sh $raw_path $suffix_tiff $type_data $orb
 
-   echo "raw_orig= $dir/batch_$orb/raw_orig" > param_dir.txt
-   echo "raw_data= $dir/batch_$orb/raw" >> param_dir.txt
-   echo "topo    = $dir/batch_$orb/topo" >> param_dir.txt
-   echo "SLC     = $dir/batch_$orb/raw" >> param_dir.txt
-   echo "stack   = $dir/batch_$orb/stack" >> param_dir.txt
-   echo "crop_SM = $dir/batch_$orb/stack/crop_SM" >> param_dir.txt
-   echo "crop_SB = $dir/batch_$orb/stack/crop_SB" >> param_dir.txt
-   echo "PS      = $dir/batch_$orb/stack/PS" >> param_dir.txt
-   echo "SB      = $dir/batch_$orb/stack/PS/SMALL_BASELINES" >> param_dir.txt
+   echo "raw_orig= $dir/batch_$orb/raw_orig" > param_dir_$orb.txt
+   echo "raw_data= $dir/batch_$orb/raw" >> param_dir_$orb.txt
+   echo "topo    = $dir/batch_$orb/topo" >> param_dir_$orb.txt
+   echo "SLC     = $dir/batch_$orb/raw" >> param_dir_$orb.txt
+   echo "stack   = $dir/batch_$orb/stack" >> param_dir_$orb.txt
+   echo "crop_SM = $dir/batch_$orb/stack/crop_SM" >> param_dir_$orb.txt
+   echo "crop_SB = $dir/batch_$orb/stack/crop_SB" >> param_dir_$orb.txt
+   echo "PS      = $dir/batch_$orb/stack/PS" >> param_dir_$orb.txt
+   echo "SB      = $dir/batch_$orb/stack/PS/SMALL_BASELINES" >> param_dir_$orb.txt
 
 fi
 
@@ -408,7 +408,7 @@ echo " "
    mkdir -p PS
    cd PS
    cp ../intf_SM.in .
-   ln -s ../../../param_dir.txt .
+   ln -s ../../../param_dir_$orb.txt .
    sed -i -e 's/[:]/ /g' intf_SM.in
    cat intf_SM.in | sed "s/S1_//g" | sed "s/_ALL_$suffix//g" > intf_SM_list.in
    rm intf_SM.in
@@ -478,7 +478,7 @@ echo " "
    mkdir -p PS
    cd PS
    cp ../intf_SB.in .
-   ln -s ../../../param_dir.txt .
+   ln -s ../../../param_dir_$orb.txt .
    sed -i -e 's/[:]/ /g' intf_SB.in
    cat intf_SB.in | sed "s/S1_//g" | sed "s/_ALL_$suffix//g" > intf_SB_list.in
    rm intf_SB.in
