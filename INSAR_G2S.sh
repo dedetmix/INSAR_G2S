@@ -70,6 +70,7 @@ master_PRM=$(grep master_PRM $path | sed 's/^.*= //')
 suffix=$(grep suffix $path | sed 's/^.*= //')
 suffix_tiff=$(grep tiff_id $path | sed 's/^.*= //')
 type_data=$(grep type_data $path | sed 's/^.*= //')
+heading=$(grep heading $path | sed 's/^.*= //')
 
 # define orbit data
 if [ $orbit = "ascending" ]; then
@@ -411,8 +412,10 @@ echo " "
    sed -i -e 's/[:]/ /g' intf_SM.in
    cat intf_SM.in | sed "s/S1_//g" | sed "s/_ALL_$suffix//g" > intf_SM_list.in
    rm intf_SM.in
+   cp ../../date_$orb.txt date_no_master.txt
+   sed -i "/\b\($master_date\)\b/d" date_no_master.txt
 
-   mt_prep_gmtsar_SM $region $R $A $ov_R $ov_A $threshold $master_date $suffix
+   mt_prep_gmtsar_SM $region $R $A $ov_R $ov_A $threshold $master_date $suffix $heading
 
    cd $dir
 
@@ -475,12 +478,14 @@ echo " "
    mkdir -p PS
    cd PS
    cp ../intf_SB.in .
-   ln -s ../../param_dir.txt .
+   ln -s ../../../param_dir.txt .
    sed -i -e 's/[:]/ /g' intf_SB.in
    cat intf_SB.in | sed "s/S1_//g" | sed "s/_ALL_$suffix//g" > intf_SB_list.in
    rm intf_SB.in
+   cp ../../date_$orb.txt date_no_master.txt
+   sed -i "/\b\($master_date\)\b/d" date_no_master.txt
 
-   mt_prep_gmtsar_SB $region $R $A $ov_R $ov_A $threshold $master_date $suffix
+   mt_prep_gmtsar_SB $region $R $A $ov_R $ov_A $threshold $master_date $suffix $heading
 
    cd $dir
 

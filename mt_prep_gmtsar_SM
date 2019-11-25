@@ -14,6 +14,7 @@ ov_A=$5
 threshold=$6
 master_date=$7
 suffix=$8
+heading=$9
 
 ################# grap directory path from param_dir.txt ############
 crop_SM=$(grep crop_SM param_dir.txt | sed 's/^.*= //')
@@ -23,10 +24,8 @@ topo=$(grep topo param_dir.txt | sed 's/^.*= //')
 SLC=$(grep SLC param_dir.txt | sed 's/^.*= //')
 #####################################################################
 
-heading=auto # for descending, for ascending: -12.00707218611660e
 
-
-# file input (must be put on PS folder):
+# file input (automatic):
 # 		date_no_master.txt
 #		intf_SM_list.in
 

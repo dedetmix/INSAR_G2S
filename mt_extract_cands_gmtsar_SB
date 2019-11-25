@@ -84,8 +84,8 @@ rm tmp bperp0 bperp1000 bperp.grd tmp.grd
 # Retrieve phase for PS candidates
 rm -f pscands.1.ph
 
-if [ -d "../$crop_SB" ]; then
-   cd ../$crop_SB
+if [ -d "$crop_SB" ]; then
+   cd $crop_SB
 else
    cd ..
 fi

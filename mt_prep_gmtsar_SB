@@ -11,16 +11,17 @@ ov_A=$5
 threshold=$6
 master_date=$7
 suffix=$8
+heading=$9
 
 ################# grap directory path from param_dir.txt ############
-crop_SM=$(grep crop_SB param_dir.txt | sed 's/^.*= //')
+crop_SB=$(grep crop_SB param_dir.txt | sed 's/^.*= //')
 raw=$(grep raw_data param_dir.txt | sed 's/^.*= //')
 raw_orig=$(grep raw_orig param_dir.txt | sed 's/^.*= //')
 topo=$(grep topo param_dir.txt | sed 's/^.*= //')
 SLC=$(grep SLC param_dir.txt | sed 's/^.*= //')
 #####################################################################
 
-# file input (must be put on PS folder):
+# file input (automatic):
 # 		date_no_master.txt
 #		intf_SB_list.in
 
@@ -50,7 +51,7 @@ while read region
 do
 
   mt_extract_info_gmtsar_SB $raw $raw_orig $topo $SLC $heading $master_date
-  mt_extract_cands_gmtsar_SB $crop $threshold $region $suffix
+  mt_extract_cands_gmtsar_SB $crop_SB $threshold $region $suffix
 
   mkdir -p cands_$p
   mv cands_old.grd cands_"$p"/.
