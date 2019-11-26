@@ -408,7 +408,7 @@ echo " "
    mkdir -p PS
    cd PS
    cp ../intf_SM.in .
-   ln -s ../../../param_dir_$orb.txt .
+   ln -s ../../../param_dir_$orb.txt param_dir.txt
    sed -i -e 's/[:]/ /g' intf_SM.in
    cat intf_SM.in | sed "s/S1_//g" | sed "s/_ALL_$suffix//g" > intf_SM_list.in
    rm intf_SM.in
@@ -478,7 +478,7 @@ echo " "
    mkdir -p PS
    cd PS
    cp ../intf_SB.in .
-   ln -s ../../../param_dir_$orb.txt .
+   ln -s ../../../param_dir_$orb.txt param_dir.txt
    sed -i -e 's/[:]/ /g' intf_SB.in
    cat intf_SB.in | sed "s/S1_//g" | sed "s/_ALL_$suffix//g" > intf_SB_list.in
    rm intf_SB.in

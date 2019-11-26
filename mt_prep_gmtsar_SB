@@ -14,11 +14,11 @@ suffix=$8
 heading=$9
 
 ################# grap directory path from param_dir.txt ############
-crop_SB=$(grep crop_SB param_dir_$orb.txt | sed 's/^.*= //')
-raw=$(grep raw_data param_dir_$orb.txt | sed 's/^.*= //')
-raw_orig=$(grep raw_orig param_dir_$orb.txt | sed 's/^.*= //')
-topo=$(grep topo param_dir_$orb.txt | sed 's/^.*= //')
-SLC=$(grep SLC param_dir_$orb.txt | sed 's/^.*= //')
+crop_SB=$(grep crop_SB param_dir.txt | sed 's/^.*= //')
+raw=$(grep raw_data param_dir.txt | sed 's/^.*= //')
+raw_orig=$(grep raw_orig param_dir.txt | sed 's/^.*= //')
+topo=$(grep topo param_dir.txt | sed 's/^.*= //')
+SLC=$(grep SLC param_dir.txt | sed 's/^.*= //')
 #####################################################################
 
 # file input (automatic):
