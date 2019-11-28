@@ -50,6 +50,10 @@ SAT_look master.PRM < tmp.llt > tmp.lltn
 gmt gmtmath -C5 -o5 tmp.lltn ACOS 180 MUL PI DIV = look_angle.1.in
 rm tmp.xy tmp.ll tmp.llt tmp.lltn
 
+rm -f list
+master_id=$(grep SC_clock_start master.PRM | awk '{printf("%d",int($3))}')
+cat date_no_master.txt | while read date; do slave_id=$(grep SC_clock_start "S1_"$date"_ALL_"$suffix"".PRM | awk '{printf("%d",int($3))}'); echo $master_id"_"$slave_id "S1_"$date"_ALL_"$suffix"" $date >> list; done
+
 # Retrieve perpendicular baseline for each interferogram
 cat list | while read name prm date
 do

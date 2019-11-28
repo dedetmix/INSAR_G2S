@@ -61,11 +61,11 @@ rm tmp.xy tmp.ll tmp.llt tmp.lltn
 # or do
 #generate list, before modify date_asc.txt without date for master!
 
-#rm -f list
-master_id=$(grep SC_clock_start master.PRM | awk '{printf("%d",int($3))}')
+if [ ! -f list ]; then
+
+   master_id=$(grep SC_clock_start master.PRM | awk '{printf("%d",int($3))}')
 cat date_no_master.txt | while read date; do slave_id=$(grep SC_clock_start "S1_"$date"_ALL_"$suffix"".PRM | awk '{printf("%d",int($3))}'); echo $master_id"_"$slave_id "S1_"$date"_ALL_"$suffix"" $date >> list; done
 
-if [ ! -f list ]; then
    cat list | while read name prm date
    do
      SAT_baseline master.PRM $prm.PRM >> $prm.PRM
