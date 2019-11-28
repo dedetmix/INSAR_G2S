@@ -28,10 +28,9 @@ cp -f pscands.1.ll ../SMALL_BASELINES/PATCH_$c/.
 cp -f pscands.1.hgt ../SMALL_BASELINES/PATCH_$c/.
 rm -f cands.ll.dat cands.dat cands_old.dat pscands* ralt raln
 cd ..
+cd SMALL_BASELINES
 
 done
-
-cd SMALL_BASELINES
 
 echo " "
 echo "$n PATCHES have been fixed"
