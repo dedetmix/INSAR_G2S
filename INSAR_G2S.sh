@@ -16,11 +16,11 @@
   dir=$(pwd)
   if [[ $# -ne 2 ]]; then
     echo ""
-    echo "Usage: INSAR_G2S [step] [parameter_with_path_directory]"
+    echo "Usage: INSAR_G2S.sh [step] [parameter_with_path_directory]"
     echo ""
     echo "  Script to pre-process SAR data and export to STAMPS format"
     echo ""
-    echo "  example : INSAR_G2S 1 /home/isya/3d_disp/param_INSAR_G2S.txt"
+    echo "  example : INSAR_G2S.sh 1 /home/isya/3d_disp/param_INSAR_G2S.txt"
     echo ""
     echo "  Step: Data Preparation --> "
     echo "        1  Prepare the directory arrangement"
@@ -325,7 +325,7 @@ echo " "
    echo "Working on batch_"$orb"/stack directory"
    echo " "     
    
-   intf_kml.sh intf_tes.in $dir/raw $dir/topo $region_ll
+   intf_kml.sh intf_tes.in ../raw ../topo $region_ll
 
    echo " "
    echo "Open kml file on Google Earth"
