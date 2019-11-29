@@ -204,7 +204,7 @@ echo " "
    ln -s ../raw_orig/*.dat .
    ln -s ../raw_orig/*.grd .
    ln -s ../raw_orig/*.xml .
-
+   cd $dir
    echo " "
    echo "From now you will work on batch_"$orb" directory"
    echo " "
