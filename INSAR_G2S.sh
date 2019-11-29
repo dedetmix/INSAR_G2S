@@ -318,11 +318,11 @@ if [ $step -eq 8 ]; then
 echo " "
 echo "INSAR_G2S STEP ---->>" $step
 echo "8  Overview the sample of amplitude and phase file on Google Earth (optional)"
-echo "Path must be located on the batch_$orb/stack"
+echo "Path must be located on the batch_$orb"
 echo " "
 
    echo " "
-   echo "Working on batch_"$orb"/stack directory"
+   echo "Working on batch_"$orb" directory"
    echo " "     
    
    intf_kml.sh intf_tes.in $dir/raw $dir/topo $region_ll
