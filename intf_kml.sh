@@ -18,12 +18,13 @@ ln -s $raw/"$master".SLC .
 ln -s $raw/"$master".LED .
 ln -s $raw/"$slave".SLC .
 ln -s $raw/"$slave".LED .
+rm -f imag.grd real.grd
 ln -s real_$master_id"_"$slave_id.grd real.grd
 ln -s imag_$master_id"_"$slave_id.grd imag.grd
 
 # do filter and create phase & amplitude
 # recommended range decimation to be 8, azimuth decimation to be 2 for S1A
-filter.csh $raw/"$master".PRM $raw/"$slave".PRM 200  1 8 2
+filter.csh $raw/"$master".PRM $raw/"$slave".PRM 200 1 8 2
 # project to global coordinate
 proj_ra2ll.csh trans.dat phase.grd phase_ll.grd
 proj_ra2ll.csh trans.dat display_amp.grd amp_ll.grd
