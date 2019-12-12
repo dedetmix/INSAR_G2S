@@ -1,0 +1,35 @@
+mv pscands.1.ph pscands.1.ph0
+
+cat << son > swap_pixels.m
+% baseline list used to get number of interferograms
+bperpname=['bperp.1.in'];
+bperp=load(bperpname);
+n_ifg=size(bperp,1);
+
+ijname=['pscands.1.ij'];
+ij=load(ijname);
+n_ps=size(ij,1);
+n_l=n_ps*n_ifg*2; %(2 for real and imag parts)
+phname=['pscands.1.ph0'];
+fid=fopen(phname,'r');
+ph=zeros(n_l,1,'single');
+byte_count=n_l*2;
+[ph_bit,byte_count]=fread(fid,[n_l,1],'float');
+
+aa=1;
+for ii=1:n_ps*2:n_l
+ for j=ii:ii+n_ps-1
+     ph(aa,1)=ph_bit(j,1);
+     ph(aa+1,1)=ph_bit(j+n_ps,1);
+     aa = aa + 2;
+ end
+end
+
+fileID = fopen('pscands.1.ph', 'w');
+fwrite(fileID,ph,'single');
+delete('pscands.1.ph0')
+exit;
+son
+
+matlab -nodesktop -nodisplay -r "swap_pixels;exit"
+
