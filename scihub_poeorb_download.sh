@@ -23,7 +23,7 @@ do
   wget -r -l1 -nd "http://aux.sentinel1.eo.esa.int/POEORB/$year/$month/$day/" --no-check-certificate --no-parent
   orb_fix=$(ls -1 "$type"*.EOF)
   echo "put $orb_fix in raw_orig"
-  mv $orb_fix $raw_org/.
+  find -name "$type*.EOF" -exec mv '{}' $raw_org/. \;
 
   #write data.in
   cd $raw_org
