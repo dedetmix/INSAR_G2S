@@ -9,7 +9,7 @@ gmtsar2stamps is originally from :
 
 Please read the guideline to use INSAR_G2S --> guideline_insar_g2s.pdf
 
-For question and feedback, contact to : Noorlaila Isya (email: n.isya@tu-bs.de)
+For question and feedback, contact to : Noorlaila Isya (email: noorlaila@geodesy.its.ac.id)
 
 Credit to users from GMTSAR forum
 http://gmt.soest.hawaii.edu/boards/6/topics/4346
