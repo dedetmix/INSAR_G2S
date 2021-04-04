@@ -206,7 +206,7 @@ echo " "
    preproc_batch_tops.csh data_"$orb"_sp.in dem.grd 1
    preproc_batch_tops.csh data_"$orb"_sp.in dem.grd 2
 
-   #check if baseline_table.dat exist
+   #check if baseline_table.dat exists
    FILE=baseline_table.dat
    if [ -f "$FILE" ]; then
       echo "$FILE exists."
