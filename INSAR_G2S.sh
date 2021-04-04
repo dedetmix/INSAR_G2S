@@ -205,6 +205,18 @@ echo " "
    ln -s ../topo/dem.grd .
    preproc_batch_tops.csh data_"$orb"_sp.in dem.grd 1
    preproc_batch_tops.csh data_"$orb"_sp.in dem.grd 2
+
+   #check if baseline_table.dat exist
+   FILE=baseline_table.dat
+   if [ -f "$FILE" ]; then
+      echo "$FILE exists."
+   else 
+      echo "$FILE does not exist, try to regenerate."
+      ls *ALL*PRM > prmlist
+      get_baseline_table.csh prmlist "$master_PRM".PRM
+      rm prmlist
+   fi
+
    cd $dir
 
    cd $dir/batch_"$orb"
