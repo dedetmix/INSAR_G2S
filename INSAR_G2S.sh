@@ -164,8 +164,22 @@ echo " "
       fi
    done  3<date_"$orb".txt 4<data_"$orb".in
 
-   # apply EAP on the xml files
-   prep.sh $orb
+   echo "--------------> Prepare EAP"
+   echo "--------------> Please choose an option "
+   echo -n "Do you want to add EAP data [type: yes or no]? "
+   read option
+
+        if [ $option = "yes" ]; then         
+           echo "apply EAP on the xml files"
+           # apply EAP on the xml files
+           prep.sh $orb
+        elif [ $option = "no" ]; then
+           
+           echo "Step 3 skip, just add some parameter files"
+        else
+           echo "--------------> Input: Option is unknown"
+        fi
+   echo " "
 
    rm -f date_"$orb".txt
    rm -f data_"$orb".in
