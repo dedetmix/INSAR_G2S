@@ -14,7 +14,7 @@ IFS=" "
 while read dataname date_aqc
 do
 
-  type=$(echo $dataname | awk '{print substr ($0, 0, 3)}')
+  type=$(echo $dataname | awk '{print substr ($0, 1, 3)}') 3($0, 0, 3)}'
   cd tmp
   date_tmp=$(date '+%C%y%m%d' -d"$date_aqc + 20 day")
   year=$(echo $date_aqc | awk '{print substr($0,1,4)}')
@@ -31,7 +31,7 @@ do
   #find list EOF name in the online directory
   wget --no-remove-listing "http://step.esa.int/auxdata/orbits/Sentinel-1/POEORB/$type/$year/$month"
   grep '</a></td>' $month | tail -n +2 | cut -d'>' -f7 | cut -d'<' -f1 > list_tmp
-  EOF_name=$(grep S1A_OPER_AUX_POEORB_OPOD_$date_tmp list_tmp | head -n 1)
+  EOF_name=$(grep "$type"_OPER_AUX_POEORB_OPOD_$date_tmp list_tmp | head -n 1)
   rm $month
 
   # download POE
