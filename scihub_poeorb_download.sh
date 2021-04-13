@@ -14,7 +14,7 @@ IFS=" "
 while read dataname date_aqc
 do
 
-  type=$(echo $dataname | awk '{print substr ($0, 1, 3)}') 3($0, 0, 3)}'
+  type=$(echo $dataname | awk '{print substr ($0, 1, 3)}') #($0, 0, 3)}'
   cd tmp
   date_tmp=$(date '+%C%y%m%d' -d"$date_aqc + 20 day")
   year=$(echo $date_aqc | awk '{print substr($0,1,4)}')
