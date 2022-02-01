@@ -1,15 +1,14 @@
-INSAR_G2S is automatic GMTSAR bundled scripts acted as InSAR Processor before
-running the InSAR time series analyis using StaMPS.
+INSAR_G2S is an automated processing to integrate between GMTSAR (the interferogram generation) and StaMPS (the time series InSAR analysis using PS and SB or both).
  
-This program is established by the scripts of gmtsar_process, gmtsar2stamps, and gmtsar2stamps_sbas.
-gmtsar2stamps is originally from :
+This program was established by the scripts of gmtsar_process, gmtsar2stamps, and gmtsar2stamps_sbas.
+gmtsar2stamps was originally from :
 - Xiaopeng Tong, Chinese Academy of Sciences
 - Xiaohua (Eric) Xu - Scripps Institution of Oceanography
 - David Sandwell, Scripps Institution of Oceanography
 
 Please read the guideline to use INSAR_G2S --> guideline_insar_g2s.pdf
 
-For question and feedback, contact to : Noorlaila Isya (email: noorlaila@geodesy.its.ac.id)
+For question and feedback, contact to : Noorlaila Hayati (email: noorlaila@geodesy.its.ac.id)
 
 Credit to users from GMTSAR forum
 http://gmt.soest.hawaii.edu/boards/6/topics/4346
