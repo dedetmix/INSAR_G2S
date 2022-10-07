@@ -43,7 +43,7 @@ ln -f -s $topo/master.PRM .
 
 # read azimuth heading angle from the master image
 if [ $heading == auto ]; then
-heading=$(grep platformHeading $raw_orig/*$master_date*.xml | awk -F">||<" '{print $3}')
+heading=$(grep platformHeading $raw_orig/*$master_date*.xml | awk -F"[>||<]" '{print $3}')
 fi
 
 p=1
