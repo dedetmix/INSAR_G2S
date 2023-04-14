@@ -28,14 +28,19 @@ filter.csh $raw/"$master".PRM $raw/"$slave".PRM 200 1 8 2
 # project to global coordinate
 proj_ra2ll.csh trans.dat phase.grd phase_ll.grd
 proj_ra2ll.csh trans.dat display_amp.grd amp_ll.grd
+proj_ra2ll.csh trans.dat corr.grd corr_ll.grd
+
 # convert to kml data (Google Earth)
-# -R9.47916666667/10.9652777778/52.4958333333/53.15
+grd2kml.csh amp_ll display_amp.cpt
+grd2kml.csh corr_ll corr.cpt
+
 gmt grdimage phase_ll.grd -JX6 -Cphase.cpt -B0.5WesN -P -Y3 -R$region --MAP_FRAME_TYPE=inside > phase_ll.ps
 gmt psconvert phase_ll.ps -TG -W+k+t"phase_$master"_"$slave"+l256/-1 -V -E526
 gmt grdimage amp_ll.grd -JX6 -Cdisplay_amp.cpt -B0.5WesN -P -Y3 -R$region --MAP_FRAME_TYPE=inside > amp_ll.ps
 gmt psconvert amp_ll.ps -TG -W+k+t"amp_$master"_"$slave"+l256/-1 -V -E526
 
 mkdir view/view_"$master"_"$slave"
+mv display_amp.grd view/view_"$master"_"$slave"/.
 mv phase_ll.grd view/view_"$master"_"$slave"/.
 mv amp_ll.grd view/view_"$master"_"$slave"/.
 mv amp_ll.png view/view_"$master"_"$slave"/.
@@ -44,8 +49,11 @@ mv phase_ll.png view/view_"$master"_"$slave"/.
 mv phase_ll.kml view/view_"$master"_"$slave"/.
 mv corr.grd view/view_"$master"_"$slave"/.
 mv corr.pdf view/view_"$master"_"$slave"/.
+mv corr_ll.kml view/view_"$master"_"$slave"/.
+mv phase_ll.ps view/view_"$master"_"$slave"/.
+mv amp_ll.ps view/view_"$master"_"$slave"/.
 
 #rm -f phase_ll.grd amp_ll.grd
-rm -f amp1.grd amp2.grd amp_ll.ps display_amp.grd display_amp.pdf filtcorr.grd mask.grd phasefilt.grd phasefilt.pdf phase.grd phase_ll.ps phase.pdf raln.grd ralt.grd realfilt.grd amp.grd imagfilt.grd ijdec
+rm -f amp1.grd amp2.grd filtcorr.grd mask.grd phasefilt.grd phasefilt.pdf phase.grd phase_ll.ps phase.pdf raln.grd ralt.grd realfilt.grd amp.grd imagfilt.grd ijdec
 rm -f "$master".SLC "$master".LED "$slaver".SLC "$slave".LED
 done < $inputfile  
