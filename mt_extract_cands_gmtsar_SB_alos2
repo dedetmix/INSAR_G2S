@@ -1,0 +1,115 @@
+#!/bin/bash 
+
+#
+# extract data for SB candidiate pixels 
+# 
+
+# make sure you have (files): list , date_no_master.txt , list_sbas (generate automatically)
+
+# Parameter (should be not changed) #
+crop_SB=$1
+threshold=$2
+region=$3
+suffix=$4
+#####################################
+dir_path=$(pwd)
+
+gmt grdmath scatter_SB.grd $threshold LT 0 NAN scatter_SB.grd MUL = cands0.grd 
+
+gmt grdsample -T cands0.grd -R$region -Gcands.grd 
+cp cands.grd cands_old.grd 
+gmt grdedit cands.grd -R$region 
+
+input="cands.grd"
+width=`gmt grdinfo -C $input | awk '{print $10}'`
+echo $width > width.txt # range
+length=`gmt grdinfo -C $input | awk '{print $11}'`
+echo $length > len.txt # azimuth
+
+# Get the difference dispersion index for PS candidates
+gmt grd2xyz cands.grd -s > cands.dat 
+gmt gmtconvert cands.dat -o2 > pscands.1.da
+awk '{printf("%d %d %d\n", NR,$2,$1)}' cands.dat > pscands.1.ij
+
+# Retrieve lon/lat for PS candidates
+gmt grd2xyz cands_old.grd -s > cands_old.dat 
+proj_ra2ll_ascii.csh trans.dat cands_old.dat cands.ll.dat
+rm ralt.grd raln.grd 
+gmt gmtconvert cands.ll.dat -o0,1 -bos > pscands.1.ll
+
+# Retrieve hgt for PS candidates
+gmt grdtrack cands.ll.dat -Gdem.grd -Z -nb -bos > pscands.1.hgt 
+
+# Retrieve look angles
+gmt grdsample cands_old.grd -I50+/50+ -Gtmp.grd 
+gmt grd2xyz tmp.grd | awk '{print $1,$2,1}' > tmp.xy
+proj_ra2ll_ascii.csh trans.dat tmp.xy tmp.ll 
+#rm ralt.grd raln.grd 
+awk '{printf("%f %f %d\n%f %f %d\n",$1,$2,0,$1,$2,1000)}' tmp.ll > tmp.llt
+SAT_look master.PRM < tmp.llt > tmp.lltn 
+gmt gmtmath -C5 -o5 tmp.lltn ACOS 180 MUL PI DIV = look_angle.1.in
+awk '{printf("%0.4f\n", $1)}' look_angle.1.in > look_angle0.1.in
+rm look_angle.1.in
+mv look_angle0.1.in look_angle.1.in
+rm tmp.xy tmp.ll tmp.llt tmp.lltn
+
+# Retrieve perpendicular baseline for each interferogram
+# copy the calculation from PS folder
+
+# cp ../../bperp* . # uncomment if PS processing has been processed and comment following lines
+
+# or do
+#generate list, before modify date_asc.txt without date for master!
+
+if [ ! -f list ]; then
+
+   master_id=$(grep SC_clock_start master.PRM | awk '{printf("%d",int($3))}')
+cat date_no_master.txt | while read date; do slave_id=$(grep SC_clock_start "S1_"$date"_ALL_"$suffix"".PRM | awk '{printf("%d",int($3))}'); echo $master_id"_"$slave_id *"$date"*.PRM $(echo $date | sed 's/^/20/') >> list; done
+
+   cat list | while read name prm date
+   do
+     SAT_baseline master.PRM $prm >> $prm
+     bperp $prm tmp.grd bperp.grd 
+     gmt grd2xyz bperp.grd | awk '{print $3}' > bperp0
+     value=`grep earth_radius $prm | awk '{print $3+1000}'`
+     update_PRM.csh $prm earth_radius $value
+     bperp $prm tmp.grd bperp.grd
+     gmt grd2xyz bperp.grd | awk '{print $3}' > bperp1000
+     paste bperp0 bperp1000 > tmp
+     awk '{printf("%f\n%f\n", $1,$2)}' tmp > bperp_$date.1.in
+   done
+fi
+rm tmp bperp0 bperp1000 bperp.grd tmp.grd
+
+# Retrieve phase for PS candidates
+rm -f pscands.1.ph
+
+if [ -d "$crop_SB" ]; then
+   cd $crop_SB
+else
+   cd ..
+fi
+identity=$(ls -1 im* | head -1 | awk '{print substr($0,4,15)}')
+if [ -f "re_$identity.grd" ]; then
+   echo "re_$identity.grd exist"
+   ls -1 im* | sed 's/im_//' | sed 's/.grd//' > $dir_path/list_sbas
+else
+   echo "re_$identity.grd does not exist, use the original imag and real files"
+   ls -1 imag* | sed 's/imag_//' | sed 's/.grd//' > $dir_path/list_sbas
+fi
+cat $dir_path/list_sbas | while read name
+do
+  if [ -f "re_$name.grd" ]; then
+    gmt grdtrack $dir_path/cands_old.dat -Gre_$name.grd -Z -bos >> $dir_path/pscands.1.ph
+    gmt grdtrack $dir_path/cands_old.dat -Gim_$name.grd -Z -bos >> $dir_path/pscands.1.ph
+  else 
+    gmt grdmath real_$name.grd FLIPUD = tmp_re.grd=bf
+    gmt grdtrack $dir_path/cands_old.dat -Gtmp_re.grd -Z -bos >> $dir_path/pscands.1.ph
+    gmt grdmath imag_$name.grd FLIPUD = tmp_im.grd=bf
+    gmt grdtrack $dir_path/cands_old.dat -Gtmp_im.grd -Z -bos >> $dir_path/pscands.1.ph
+  fi
+done
+cd $dir_path
+
+rm *.PRM *.LED
+#rm cands_old.grd cands0.grd cands.grd

@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# Creator: Xiaopeng Tong, David Sandwell
+# Date:    July 4th 2013 
+# Modified by
+# NI, 07.10.2019 (noorlaila@geodesy.its.ac.id)
+# mt_prep gmtsar for SM configuration
+
+region=$1
+R=$2
+A=$3
+ov_R=$4
+ov_A=$5
+threshold=$6
+master_date=$7
+suffix=$8
+heading=$9
+
+################# grap directory path from param_dir.txt ############
+crop_SM=$(grep crop_SM param_dir.txt | sed 's/^.*= //')
+raw=$(grep raw_data param_dir.txt | sed 's/^.*= //')
+topo=$(grep topo param_dir.txt | sed 's/^.*= //')
+SLC=$(grep SLC param_dir.txt | sed 's/^.*= //')
+#####################################################################
+
+
+# file input (automatic):
+# 		date_no_master.txt
+#		intf_SM_list.in
+
+rm -r -f patch_SM cands_SM_*
+mkdir patch_SM
+cd patch_SM
+devide_region.sh $region $R $A $ov_R $ov_A
+cd ..
+
+echo "gmtsar" > processor.txt
+matlab -nojvm -nosplash -nodisplay < $STAMPS/matlab/ps_parms_initial.m > ps_parms_initial.log
+
+rm -r -f PATCH_*
+ln -f -s $topo/master.PRM .
+
+# read azimuth heading angle from the master image
+if [ $heading == auto ]; then
+heading=$(grep platformHeading $raw_orig/*$master_date*.xml | awk -F"[>||<]" '{print $3}')
+fi
+
+p=1
+while read region
+do
+
+  mt_extract_info_gmtsar_SM_alos2 $raw $topo $heading $master_date
+  mt_extract_cands_gmtsar_SM_alos2 $crop_SM $threshold $region $suffix
+
+  mkdir -p cands_SM_$p
+  mv cands_old.grd cands_SM_"$p"/.
+  mv cands0.grd cands_SM_"$p"/.
+  mv cands.grd cands_SM_"$p"/.
+
+  patch=$(echo PATCH_$p)
+  mkdir $patch
+  mv pscands* $patch/.
+  ln -s -f $PWD/bperp.1.in $patch/.
+  cd $patch
+  correct_forum
+  rm -f swap_pixels.m
+  cd ..
+  (( p++ ))
+done < patch_SM/PATCH.loc
+
+rsync -av patch_SM/PATCH_* .
+cp patch_SM/width.txt .
+cp patch_SM/len.txt .
+#ln -f -s ../*.in .
+ls -d PATCH_* > patch.list
+cd ..
+

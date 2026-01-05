@@ -1,0 +1,34 @@
+############ set parameters ##############################################################
+dataorbit  	= ascending
+             	# OPTION: ascending or descending
+raw_path   	= /media/laila/My_Passport/PALSAR-2_SBY_DATA
+temp_bl    	= 300
+spatial_bl 	= 150
+n_range    	= 2
+n_azimuth  	= 2
+ov_range   	= 50
+ov_azimuth 	= 50
+threshold  	= 0.06
+heading    	= 324.122034637109
+		# Option: auto or for descending:-164.296, for ascending: -12.00707218611660e --> Sen1
+master_date	= 231031
+master_PRM 	= IMG-HH-ALOS2509747040-231031-FBDR1.1__A
+suffix_file     = HH 
+ 		# Option: HH or HV
+type_data  	= FBD 
+		# Option: FBD or FBS
+sensor_data	= PALSAR2 
+		# Option: Sentinel1 or PALSAR2
+##########################################################################################
+Download DEM
+demlong_min	= 112.375878
+demlong_max	= 112.968754
+demlat_min	= -7.539721
+demlat_max	= -6.869404
+##########################################################################################
+AOI (cut region)
+long_min_aoi	= 112.629334
+long_max_aoi	= 112.882491
+lat_min_aoi	= -7.373392
+lat_max_aoi	= -7.180099
+##########################################################################################

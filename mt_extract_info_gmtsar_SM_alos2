@@ -1,0 +1,43 @@
+#!/bin/bash 
+
+#
+# Extract info from various files for use by StaMPS
+#
+# make sure you have (files): intf_SM_list , date_dsc_no_master.txt
+
+raw=$1
+topo=$2
+heading=$3
+master_date=$4
+
+SLC_OSF="1"  # check if oversampled or not
+echo $SLC_OSF > slc_osfactor.1.in                 # put oversampling factor to file 
+
+awk '$5 != 0' $raw/baseline_table.dat > $raw/baseline_table_no_master.dat
+
+# Create other input files for PS candidates
+if [ -f bperp.1.in ]; then
+   echo "File bperp.1.in exists."
+else
+   echo "File bperp.1.in does not exist."
+   awk '{printf("%0.4f\n", $5)}' $raw/baseline_table_no_master.dat > bperp.1.in
+   cp date_no_master.txt day.1.in
+   #sed -i 's/^/20/' day.1.in
+   echo "$master_date" > master_day.1.in
+   #add 20 to be able read by StaMPS
+   #sed -i 's/^/20/' master_day.1.in
+   grep radar_wavelength $topo/master.PRM | awk '{print $3}' > lambda.1.in # in meters
+fi
+ 
+#awk '{print substr($0,4,8)}' baseline_info.dat > day.1.in
+#awk '{printf("%d\n", $1)}' baseline_info.dat > day.1.in
+#awk '{print $3}' list > day.1.in
+#echo "19930112" > master_day.1.in
+
+echo $heading > heading.1.in # for Sentinel-1 ASC: "-12.00707218611660e"
+cp $raw/*LED .
+cp $raw/*.PRM .
+cp $topo/master.PRM .
+ln -s -f $topo/trans.dat .
+ln -s -f $topo/dem.grd .
+ln -s -f $raw/scatter_SM.grd .

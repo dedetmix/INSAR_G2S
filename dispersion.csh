@@ -40,7 +40,7 @@ endif
 set list = $1 
 set outgrd = $2
 set region = $3
-set filter = $GMTSAR/gmtsar/filters/gauss5x5 #gauss5x5 has better result
+set filter = $GMTSAR/gmtsar/filters/gauss_alos_100m #gauss5x5 has better result for Sentinel-1
 #set filter = gauss5x3
 set namearray =
 set weightarray = 
@@ -57,7 +57,7 @@ echo ""
 echo "compute amplitude from SLCs ..."
 @ num = 1
 foreach prm (`cat $list`) 
-  set name = `grep input_file $prm | awk '{print $3}' | sed 's/\.raw//'`
+  set name = `grep input_file $prm | awk '{print $3}' | sed 's/\.raw//' | sed 's/\.SLC//'` #add to remove .SLC -- 27.12.2025
   set namearray = ($namearray $name)
   if (-e $prm) then 
     if (! -e $name".grd") then
@@ -149,9 +149,19 @@ echo ""
 echo "compute the scattering amplitude ... "
 gmt grdmath sig_A.grd M_A.grd DIV = $outgrd
 
-gmt makecpt -Cgray -T0.1/1/0.1 -Z -D > scatter.cpt
+#find the max of AD value
+set v_max_value=`gmt grdinfo $outgrd | awk -F'v_max: ' '{print $2}' | awk '{print $1}'`
+set even_v_max=`echo $v_max_value | awk '{printf "%.1f", $1}'`
+echo $v_max_value
+echo $even_v_max
 
-gmt grdimage $outgrd -Cscatter.cpt -JX6i -P -X1i -Y3i -V -R$region -Bf5000a10000WSen -K > scatter_AD.ps
+  if ( `echo "$even_v_max >= 0.5" | bc -l` ) then
+    gmt makecpt -Cgray -T0.1/1/0.1 -Z -D > scatter.cpt
+  else
+    gmt makecpt -Cgray -T-0.1/$even_v_max/0.01 -Z -D > scatter.cpt
+  endif
+
+gmt grdimage $outgrd -Cscatter.cpt -JX6i -P -X1i -Y3i -V -R$region -Bf500a2000WSen -K > scatter_AD.ps
 gmt psscale -D3/-0.8/5/0.5h -Cscatter.cpt -Ba0.2f0.1:"amplitude dispersion": -O >> scatter_AD.ps
 
 echo ""

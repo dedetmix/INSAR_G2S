@@ -70,7 +70,7 @@ num=1
 rm -f namearray.txt weightarray.txt
 while read prm
 do
-  name=$(grep input_file $prm | awk '{print $3}' | sed 's/\.raw//')
+  name=$(grep input_file $prm | awk '{print $3}' | sed 's/\.raw//' | sed 's/\.SLC//')  #add to remove .SLC -- 27.12.2025
   #namearray=(${namearray[*]}  $name".grd")
   #echo "${namearray[*]}" >> namearray.txt
   echo $name >> namearray.txt
@@ -157,8 +157,8 @@ paste -d\  $sbas_list weightarray.txt > sigA_variable.txt
 num=1
 while read master slave weight_m weight_s
 do
-  name_m=$(grep input_file $master".PRM" | awk '{print $3}' | sed 's/\.raw//')
-  name_s=$(grep input_file $slave".PRM" | awk '{print $3}' | sed 's/\.raw//')
+  name_m=$(grep input_file $master".PRM" | awk '{print $3}' | sed 's/\.raw//' | sed 's/\.SLC//')
+  name_s=$(grep input_file $slave".PRM" | awk '{print $3}' | sed 's/\.raw//' | sed 's/\.SLC//')
   gmt grdmath $name_m".grd" $weight_m DIV = amp_m_calib.grd
   gmt grdmath $name_s".grd" $weight_s DIV = amp_s_calib.grd
   if [ $num == 1 ]; then
@@ -182,7 +182,17 @@ echo ""
 echo "compute the scattering difference amplitude ... "
 gmt grdmath sig_delta_A.grd M_A_sb.grd DIV = $outgrd
 
-gmt makecpt -Cgray -T0/1/0.1 -Z -D > scatter.cpt
+#find the max of ADD value
+v_max_value=$(gmt grdinfo $outgrd | awk -F'v_max: ' '{print $2}' | awk '{print $1}')
+even_v_max=$(printf "%.1f" $v_max_value)
+echo $v_max_value
+echo $even_v_max
+
+  if [ "$(echo "$even_v_max >= 0.6" | bc -l)" -eq 1 ]; then
+    gmt makecpt -Cgray -T0.1/1/0.1 -Z -D > scatter.cpt
+  else
+    gmt makecpt -Cgray -T-0.1/$even_v_max/0.01 -Z -D > scatter.cpt
+  fi
 
 gmt grdimage $outgrd -Cscatter.cpt -JX6i -P -X1i -Y3i -V -Bf500a2000WSen -K > scatter_SB.ps
 gmt psscale -D3/-0.8/5/0.5h -Cscatter.cpt -Ba0.2f0.1:"amplitude difference dispersion": -O >> scatter_SB.ps
