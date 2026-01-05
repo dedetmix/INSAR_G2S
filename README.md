@@ -7,8 +7,9 @@ gmtsar2stamps was originally from :
 - David Sandwell, Scripps Institution of Oceanography
 
 Please read the guideline to use INSAR_G2S --> guideline_insar_g2s.pdf
+These scripts can be used for Sentinel-1 and ALOS PALSAR-2 data.
 
-For question and feedback, contact to : Noorlaila Hayati (email: noorlaila@geodesy.its.ac.id)
+For question and feedback, contact to : Noorlaila Hayati (email: noorlaila@its.ac.id)
 
 Credit to users from GMTSAR forum
 http://gmt.soest.hawaii.edu/boards/6/topics/4346
