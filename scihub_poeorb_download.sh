@@ -30,8 +30,8 @@ do
   
   #find list EOF name in the online directory
   wget --no-remove-listing "http://step.esa.int/auxdata/orbits/Sentinel-1/POEORB/$type/$year/$month"
-  grep '</a></td>' $month | tail -n +2 | cut -d'>' -f7 | cut -d'<' -f1 > list_tmp
-  EOF_name=$(grep "$type"_OPER_AUX_POEORB_OPOD_$date_tmp list_tmp | head -n 1)
+  grep '<a href=' $month | tail -n +2 > list_tmp
+  EOF_name=$(grep "$type"_OPER_AUX_POEORB_OPOD_$date_tmp list_tmp | head -n 1 | grep -oP "(?<=href=\")${type}_OPER_AUX_POEORB_OPOD_[^\"]+\.EOF\.zip")
   rm $month
 
   # download POE
