@@ -71,6 +71,14 @@ suffix=$(grep suffix $path | sed 's/^.*= //')
 suffix_tiff=$(grep tiff_id $path | sed 's/^.*= //')
 type_data=$(grep type_data $path | sed 's/^.*= //')
 heading=$(grep heading $path | sed 's/^.*= //')
+long_min=$(grep demlong_min $path | sed 's/^.*= //')
+long_max=$(grep demlong_max $path | sed 's/^.*= //')
+lat_min=$(grep demlat_min $path | sed 's/^.*= //')
+lat_max=$(grep demlat_max $path | sed 's/^.*= //')
+long_min_aoi=$(grep long_min_aoi $path | sed 's/^.*= //')
+long_max_aoi=$(grep long_max_aoi $path | sed 's/^.*= //')
+lat_min_aoi=$(grep lat_min_aoi $path | sed 's/^.*= //')
+lat_max_aoi=$(grep lat_max_aoi $path | sed 's/^.*= //')
 
 # define orbit data
 if [ $orbit = "ascending" ]; then
@@ -189,6 +197,7 @@ echo " "
    cd $dir
    echo " "
    echo "==== Please save dem.grd file in topo folder ===="
+   echo "==== OR you can download it automatically from Step 4, make sure you write the coordinate of DEM in 'param' file! ===="
    echo " "
 
 fi
@@ -197,10 +206,33 @@ fi
 if [ $step -eq 4 ]; then
 echo " "
 echo "INSAR_G2S STEP ---->>" $step
-echo "4  Preprocess SAR data: Compute Baseline and Alignment"
+echo "4  Preprocess SAR data: Download DEM, Compute Baseline and Alignment"
 echo "Path must be located on the basement"
 echo " "
-    
+
+echo " "
+   echo "--------------> Please choose an option "
+   echo -n "Do you want to automatically download DEM in the topo folder [type: Yes or No]? "
+   read option
+        
+        if [ $option = "Yes" ]; then
+          
+   	   #Download DEM
+   	   cd $dir/batch_"$orb"
+   	   mkdir topo
+   	   cd topo
+   	   echo "DEM AOI $long_min"/"$long_max"/"$lat_min"/"$lat_max"
+   	   make_dem.csh $long_min $long_max $lat_min $lat_max 1
+   	   cd $dir
+
+        elif [ $option = "No" ]; then
+
+           echo "You need to manually download DEM and save to topo folder as dem.grd"   
+
+        else
+           echo "--------------> Input: Option is unknown"
+        fi     
+   
    cd $dir/batch_"$orb"/raw_orig
    ln -s ../topo/dem.grd .
    preproc_batch_tops.csh data_"$orb"_sp.in dem.grd 1
@@ -374,6 +406,13 @@ echo " "
    echo "--------------> Please choose an option "
    echo -n "Single Master (MS) or Small Baseline (SB) mode [type: SM or SB]? "
    read option
+   
+        echo $long_min_aoi $lat_min_aoi "0" > aoi_ll.xyz
+        echo $long_max_aoi $lat_max_aoi "0" >> aoi_ll.xyz
+        
+        #project geographic (long,lat) to radar coordinates (range, azimuth)
+        proj_ll2ra_ascii.csh ../topo/trans.dat aoi_ll.xyz aoi_ra.xyz
+        region=$(awk '{x[NR]=$1; y[NR]=$2} END {print int(x[1]) "/" int(x[2]) "/" int(y[1]) "/" int(y[2])}' aoi_ra.xyz)
         
         if [ $option = "SM" ]; then
           
@@ -403,6 +442,8 @@ echo "10 Create Amplitude Dispersion Index"
 echo "Path must be located on the batch_$orb/stack"
 echo " "
 
+   region=$(awk '{x[NR]=$1; y[NR]=$2} END {print int(x[1]) "/" int(x[2]) "/" int(y[1]) "/" int(y[2])}' aoi_ra.xyz)
+   
    echo " "
    echo "Working on batch_"$orb"/raw directory"
    echo " "     
@@ -429,7 +470,9 @@ echo " "
 
    echo " "
    echo "Working on batch_"$orb"/stack directory"
-   echo " "     
+   echo " "
+   
+   region=$(awk '{x[NR]=$1; y[NR]=$2} END {print int(x[1]) "/" int(x[2]) "/" int(y[1]) "/" int(y[2])}' aoi_ra.xyz)     
    
    mkdir -p PS
    cd PS
@@ -471,6 +514,8 @@ echo "13 Create Amplitude Difference Dispersion Index"
 echo "Path must be located on the batch_$orb/stack"
 echo " "
 
+   region=$(awk '{x[NR]=$1; y[NR]=$2} END {print int(x[1]) "/" int(x[2]) "/" int(y[1]) "/" int(y[2])}' aoi_ra.xyz)
+   
    echo " "
    echo "Working on batch_"$orb"/raw directory"
    echo " "     
@@ -497,6 +542,8 @@ echo "14 Convert GMTSAR result to be able processed by STAMPS SB"
 echo "Path must be located on the batch_$orb/stack"
 echo " "
 
+   region=$(awk '{x[NR]=$1; y[NR]=$2} END {print int(x[1]) "/" int(x[2]) "/" int(y[1]) "/" int(y[2])}' aoi_ra.xyz)
+   
    echo " "
    echo "Working on batch_"$orb"/stack directory"
    echo " "     
